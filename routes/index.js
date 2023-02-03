@@ -13,22 +13,19 @@ router.get('/', async function (req, res, next) {
     });
 });
 
-router.get('/post/:id', async function (req, res ) {
-    console.log(req.params.id);
-//    const [rows] = await promisePool.query("SELECT * FROM ja15forum WHERE id = ?", [req.params.id]);
+router.get('/post/:id', async function (req, res) {
+    const [rows] = await promisePool.query(
+        `SELECT ja15forum.*, ja15users.name AS username
+        FROM ja15forum
+        JOIN ja15users ON ja15forum.authorId = ja15users.id
+        WHERE ja15forum.id = ?;`,
+        [req.params.id]
+    );
 
-const [rows] = await promisePool.query(`
-SELECT ja15forum.*, ja15users.name AS username
-FROM ja15forum
-JOIN ja15users ON ja15forum.authorId = ja15users.id
-WHERE ja15forum.id = ?;`, [req.params.id]);
-
-res.render('post.njk', {
+    res.render('post.njk', {
         post: rows[0],
         title: 'Forum',
     });
-
-    
 });
 
 module.exports = router;
