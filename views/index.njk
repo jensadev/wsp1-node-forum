@@ -1,12 +1,14 @@
 {% extends "layout.njk" %}
-{% block  content %}
-  <h1>Forum - Alla trådar</h1>
-  <ul>
+{% block content %}
+<h1>Forum - Alla trådar</h1>
+<ul>
     {% for row in rows %}
-        <li>
-            <a href="/post/{{ row.id }}">{{ row.title }}</a>
-            <p>Skapad av {{ row.username }} den {{ row.createdAt }}</p>
-        </li>
+    <li>
+        <a href="/post/{{ row.title | slugify }}/{{ row.id }}">{{ row.title }}</a>
+        <p>Postad av 
+            <a href="/users/{{ row.username | slugify }}/ {{ row.authorId }}">{{ row.username }}</a> 
+            den {{ row.createdAt | date }}.</p>
+    </li>
     {% endfor %}
-  </ul>
+</ul>
 {% endblock %}

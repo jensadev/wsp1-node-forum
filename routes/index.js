@@ -13,7 +13,7 @@ router.get('/', async function (req, res, next) {
     });
 });
 
-router.get('/post/:id', async function (req, res) {
+router.get('/post/:slug/:id', async function (req, res) {
     const [rows] = await promisePool.query(
         `SELECT ja15forum.*, ja15users.name AS username
         FROM ja15forum
