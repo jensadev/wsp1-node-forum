@@ -1,22 +1,34 @@
 const express = require('express');
 const router = express.Router();
-
-const mysql = require('mysql2');
-const pool = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    database: process.env.DB_DATABASE,
-    password: process.env.DB_PASSWORD,
-});
-const promisePool = pool.promise();
+const promisePool = require('../utils/db');
 
 router.get('/', async function (req, res, next) {
-    const [rows] = await promisePool.query("SELECT * FROM ja15forum");
-    // res.json({ rows });
+    const [rows] = await promisePool.query(`
+    SELECT ja15forum.*, ja15users.name AS username
+    FROM ja15forum
+    JOIN ja15users ON ja15forum.authorId = ja15users.id;`);
     res.render('index.njk', {
         rows: rows,
         title: 'Forum',
     });
+});
+
+router.get('/post/:id', async function (req, res ) {
+    console.log(req.params.id);
+//    const [rows] = await promisePool.query("SELECT * FROM ja15forum WHERE id = ?", [req.params.id]);
+
+const [rows] = await promisePool.query(`
+SELECT ja15forum.*, ja15users.name AS username
+FROM ja15forum
+JOIN ja15users ON ja15forum.authorId = ja15users.id
+WHERE ja15forum.id = ?;`, [req.params.id]);
+
+res.render('post.njk', {
+        post: rows[0],
+        title: 'Forum',
+    });
+
+    
 });
 
 module.exports = router;

@@ -1,10 +1,11 @@
 {% extends "layout.njk" %}
 {% block  content %}
-  <h1>Forum</h1>
+  <h1>Forum - Alla trådar</h1>
   <ul>
     {% for row in rows %}
         <li>
-            {{ row | dump }}
+            <a href="/post/{{ row.id }}">{{ row.title }}</a>
+            <p>Skapad av {{ row.username }} den {{ row.createdAt }}</p>
         </li>
     {% endfor %}
   </ul>
